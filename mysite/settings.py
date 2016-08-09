@@ -136,3 +136,9 @@ USE_TZ = True
 
 STATIC_ROOT='static'
 STATIC_URL = '/static/'
+
+
+# Weibo User Infomation
+APP_KEY = '4273565439'
+APP_SECRETKEY = '8934220d93ea8caf4e93c0ddefe14d76'
+WEIBO_ACCESS_TOKEN = '2.00yueGSCpa8NfEade730aeb7NYiLCD'
