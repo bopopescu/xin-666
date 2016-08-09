@@ -17,6 +17,7 @@ def place_pois(place_list=None): # [a, b] are the month of 2016 to request a dat
     else:
         for place_item in place_list:
             stop_loop = False
+            stop_page_loop = False
             for page in range(1, 200):
                 url = "https://api.weibo.com/2/place/pois/photos.json?poiid={0}&count=50&page={1}&access_token={2}".format(place_item.poiid, page, settings.WEIBO_ACCESS_TOKEN) 
                 start_date = datetime.date(2016, 1, 1)
@@ -38,6 +39,7 @@ def place_pois(place_list=None): # [a, b] are the month of 2016 to request a dat
                 # catastrophic error. bail.
                     print e
                 if not data:
+                    stop_page_loop = True
                     stop_loop = True
                     break
                 json_data = json.dumps(data['statuses'])
@@ -47,7 +49,7 @@ def place_pois(place_list=None): # [a, b] are the month of 2016 to request a dat
                     create_date = time.mktime(create_date)
                     create_date = datetime.date.fromtimestamp(create_date)
                     if start_date > create_date or create_date > end_date:
-                        stop_loop = True
+                        stop_page_loop = True
                         break
                     print index, item['id']
                     print start_date, create_date, end_date
@@ -67,7 +69,8 @@ def place_pois(place_list=None): # [a, b] are the month of 2016 to request a dat
                             p = Post.objects.get(weibo_id=item['id'])
                             print 'get -p'
                             # Uncomment below line after got sorted all error
-                            # stop_loop = True
+                            stop_loop = True
+                            stop_page_loop = True
                             break
                         except Post.DoesNotExist:
                             p = Post(
@@ -78,6 +81,5 @@ def place_pois(place_list=None): # [a, b] are the month of 2016 to request a dat
                             print 'saved -p'
                     except KeyError:
                         pass    
-            if stop_loop:           
-                break
-
+                if stop_page_loop:           
+                    break
