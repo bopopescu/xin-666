@@ -4,7 +4,6 @@ from weibousers.models import WeiboUser
 
 
 class Place(models.Model):
-	"""docstring for place"""
 	name = models.CharField(db_index=True, max_length=120)
 	poiid = models.CharField(db_index=True, max_length=120)
 

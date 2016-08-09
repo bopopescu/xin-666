@@ -13,7 +13,28 @@
 # limitations under the License.
 
 from django.http import HttpResponse
-
+from .models import Place, Post
+from django.shortcuts import render
 
 def index(request):
-    return HttpResponse("Hello, This app will be updated soon")
+	cx = {}
+	statistics = []
+	places = Place.objects.all()
+	for place in places:
+		posts = Post.objects.filter(place=place)
+		not_categorised_posts = posts.filter(category=None)
+		statistics.append({
+			'place': place,
+			'count': posts.count(),
+			'not_categorised_count': not_categorised_posts.count()
+		})
+		cx['statistics'] = statistics
+				
+	return render(request, "index.html", cx)
+
+def place_index(request, place_id):
+    cx = {}
+    place = Place.objects.get(id=place_id)
+    cx['place'] = place
+    cx['posts'] = Post.objects.filter(place=place).order_by('created')[:10]
+    return render(request, "location/place_index.html", cx)

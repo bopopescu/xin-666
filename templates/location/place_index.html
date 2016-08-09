@@ -1,0 +1,9 @@
+<h1>{{place.name}}</h1>
+<br>
+{% for post in posts %}
+	{{post.weibo_id}} - {{post.user.name}}
+	<br>
+	<img src="{{post.weibo_img}}" alt="">
+	<p>{{post.text}} - {{post.created}}</p>
+	<br>
+{% endfor %}

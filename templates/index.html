@@ -1,0 +1,9 @@
+<h1>Statistics</h1>
+<br><br>
+
+{% for statistic in statistics %}
+	<h3>{{statistic.place.name}}({{statistic.place.id}}) - </h3>
+	<h3>Total:{{statistic.count}}</h3>
+	<a href="{% url 'location:place_index' statistic.place.id %}">Need to categorise: {{statistic.not_categorised_count}}</a>
+	<br>
+{% endfor %}
