@@ -4,11 +4,13 @@ from weibousers.models import WeiboUser
 
 
 class Place(models.Model):
-	name = models.CharField(db_index=True, max_length=120)
-	poiid = models.CharField(db_index=True, max_length=120)
+    name = models.CharField(db_index=True, max_length=120)
+    poiid = models.CharField(db_index=True, max_length=120)
+    province = models.PositiveSmallIntegerField(null=True, blank=True)
+    city = models.PositiveSmallIntegerField(null=True, blank=True)
 
-	def __unicode__(self):
-	    return self.name
+    def __unicode__(self):
+        return self.name
 
 
 class Post(models.Model):
@@ -18,7 +20,6 @@ class Post(models.Model):
     created = models.DateField(blank=True, null=True)
     text = models.TextField(blank=True, null=True)
     weibo_img = models.CharField(max_length=150, blank=True, null=True)
-    image = models.ImageField(max_length=200, blank=True, null=True)
     category = models.ForeignKey('categories.Category', blank=True, null=True)
 
     class Meta:
