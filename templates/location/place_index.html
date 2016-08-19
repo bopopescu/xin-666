@@ -1,5 +1,10 @@
-<h1>{{place.name}}</h1>
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{place.name}}</h2>
 <br>
+<a href="{% url 'location:categorise_post' place.id %}">Go to categorise a post</a>
+<br>
+<h3>Recent 10 Posts</h3>
 {% for post in posts %}
 	{{post.weibo_id}} - {{post.user.name}}
 	<br>
@@ -7,3 +12,4 @@
 	<p>{{post.text}} - {{post.created}}</p>
 	<br>
 {% endfor %}
+{% endblock %}
