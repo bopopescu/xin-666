@@ -99,7 +99,7 @@ if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'HOST': '/cloudsql/xin-666:xin-666',
+            'HOST': '/cloudsql/xin-666:xin-666-d0-0',
             'NAME': 'xin666',
             'USER': 'root',
         }
