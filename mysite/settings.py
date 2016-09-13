@@ -102,17 +102,19 @@ if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine'):
             'HOST': '/cloudsql/xin-666:xin-666-d0-0',
             'NAME': 'xin666',
             'USER': 'root',
+            'OPTIONS': {'charset': 'utf8mb4'},
         }
     }
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'xin666',
+            'NAME': 'xin666_d0',
             'USER': 'root',
             'PASSWORD': '',
             'HOST': 'localhost',
             'PORT': '3306',
+            'OPTIONS': {'charset': 'utf8mb4'},
         }
     }
 # [END db_setup]
