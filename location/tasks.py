@@ -9,6 +9,8 @@ import calendar
 import os
 from .models import Place, Post
 from weibousers.models import WeiboUser
+import tempfile
+from django.core import files
 
 @app.task
 def place_pois(place_list=None): # [a, b] are the month of 2016 to request a data from weibo api
@@ -18,12 +20,12 @@ def place_pois(place_list=None): # [a, b] are the month of 2016 to request a dat
         for place_item in place_list:
             stop_loop = False
             stop_page_loop = False
-            for page in range(1, 200):
+            for page in range(1, 100):
                 url = "https://api.weibo.com/2/place/pois/photos.json?poiid={0}&count=50&page={1}&access_token={2}".format(place_item.poiid, page, settings.WEIBO_ACCESS_TOKEN) 
-                start_date = datetime.date(2016, 1, 1)
+                start_date = datetime.datetime(2016, 1, 1, 0, 0, 0)
                 # _end_date = datetime.date(2016, b, 31)
                 # end_date = _end_date.replace(day = calendar.monthrange(_end_date.year, _end_date.month)[1])
-                end_date = datetime.date(2016, 12, 31)
+                end_date = datetime.datetime(2016, 12, 31, 23, 59, 59)
                 print url, start_date, end_date
                 try:
                     response = requests.get(url)
@@ -47,7 +49,7 @@ def place_pois(place_list=None): # [a, b] are the month of 2016 to request a dat
                 for index, item in enumerate(item_dict):
                     create_date = parsedate(item["created_at"])
                     create_date = time.mktime(create_date)
-                    create_date = datetime.date.fromtimestamp(create_date)
+                    create_date = datetime.datetime.fromtimestamp(create_date)
                     if start_date > create_date or create_date > end_date:
                         stop_page_loop = True
                         break
@@ -73,13 +75,47 @@ def place_pois(place_list=None): # [a, b] are the month of 2016 to request a dat
                             stop_page_loop = True
                             break
                         except Post.DoesNotExist:
+                            text = item['text']
+                            print text
                             p = Post(
                                 place=place_item, user=u, 
                                 weibo_id=item['id'], created=create_date, 
-                                text=item['text'], weibo_img=item['bmiddle_pic'] )
+                                text=item['text'], weibo_img=item['bmiddle_pic'],
+                                weibo_thumb_img=item['thumbnail_pic']  )
                             p.save()
                             print 'saved -p'
                     except KeyError:
                         pass    
                 if stop_page_loop:           
-                    break
+                    break   
+
+@app.task
+def download_image():
+	for post in Post.objects.filter(image__isnull=True):
+		image_url = post.weibo_img
+		request = requests.get(image_url, stream=True)
+
+		# Was the request OK?
+		# if request.status_code != requests.codes.ok:
+		#     # Nope, error handling, skip file etc etc etc
+		# 	continue
+
+		# Get the filename from the url, used for saving later
+		file_name = image_url.split('/')[-1]
+		print file_name
+		# Create a temporary file
+		lf = tempfile.NamedTemporaryFile()
+
+		# Read the streamed image in sections
+		for block in request.iter_content(1024 * 8):
+
+		    # If no more file then stop
+			if not block:
+				break
+
+		    # Write image block to temporary file
+			lf.write(block)
+
+		# Create the model you want to save the image to
+		post.image.save(file_name, files.File(lf))
+
