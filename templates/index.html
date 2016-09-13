@@ -1,11 +1,277 @@
 {% extends 'base.html' %}
 {% block content %}  
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-warning text-center">
+                                <i class="ti-server"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>The number of shopping malls</p>
+                                {{places}} 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-success text-center">
+                                <i class="ti-wallet"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>The number of total data</p>
+                                {{posts}} posts
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-danger text-center">
+                                <i class="ti-pulse"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>The number of uncategorised data</p>
+                                {{uncategorised_posts}} posts
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-info text-center">
+                                <i class="ti-twitter-alt"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>The number of users</p>
+                                {{users}} users
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+                <div class="header">
+                    <h4 class="title">2016 Posts</h4>
+                </div>
+                <div class="content">
+                    <div id="chartActivity" class="ct-chart"></div>
+
+                    <div class="footer">
+                        <div class="chart-legend">
+                        {% for statistic in statistics %}
+                            <i class="fa fa-circle {% cycle 'text-info' 'text-warning' 'text-danger' 'text-success' 'text-primary' %}">{{ statistic.place.name }}</i> 
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Gender Statistics</h4>
+                    <p class="category">Weibo Users Info</p>
+                </div>
+                <div class="content">
+                    <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
+
+                    <div class="footer">
+                        <div class="chart-legend">
+                            <i class="fa fa-circle text-warning"></i> Female
+                            <i class="fa fa-circle text-info"></i> Male
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Gender Statistics</h4>
+                    <p class="category">Weibo Users Info</p>
+                </div>
+                <div class="content">
+                    <div id="chartPreferences" class="ct-chart ct-perfect-fourth"></div>
+
+                    <div class="footer">
+                        <div class="chart-legend">
+                            <i class="fa fa-circle text-warning"></i> Female
+                            <i class="fa fa-circle text-info"></i> Male
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--
 <h2>Statistics</h2>
 <br><br>
 {% for statistic in statistics %}
 	<h3>{{statistic.place.name}}({{statistic.place.id}}) - </h3>
 	<h3>Total:{{statistic.count}}</h3>
 	<a href="{% url 'location:categorise_post' statistic.place.id %}">Need to categorise: {{statistic.not_categorised_count}}</a>
+	[{% for report  in statistic.report %}
+    {{ report.pk__count }},
+	{% endfor %}
+	]
 	<br>
 {% endfor %}
+{% endblock %}
+-->
+{% block js %}
+<script>
+demo = {
+	initChartist: function(){
+
+	    // var dataSales = {
+	    //   labels: ['9:00AM', '12:00AM', '3:00PM', '6:00PM', '9:00PM', '12:00PM', '3:00AM', '6:00AM'],
+	    //   series: [
+	    //      [287, 385, 490, 562, 594, 626, 698, 895, 952],
+	    //     [67, 152, 193, 240, 387, 435, 535, 642, 744],
+	    //     [23, 113, 67, 108, 190, 239, 307, 410, 410]
+	    //   ]
+	    // };
+
+	    // var optionsSales = {
+	    //   lineSmooth: false,
+	    //   low: 0,
+	    //   high: 1000,
+	    //   showArea: true,
+	    //   height: "245px",
+	    //   axisX: {
+	    //     showGrid: false,
+	    //   },
+	    //   lineSmooth: Chartist.Interpolation.simple({
+	    //     divisor: 3
+	    //   }),
+	    //   showLine: true,
+	    //   showPoint: false,
+	    // };
+
+	    // var responsiveSales = [
+	    //   ['screen and (max-width: 640px)', {
+	    //     axisX: {
+	    //       labelInterpolationFnc: function (value) {
+	    //         return value[0];
+	    //       }
+	    //     }
+	    //   }]
+	    // ];
+
+	    // Chartist.Line('#chartHours', dataSales, optionsSales, responsiveSales);
+
+
+	    var data = {
+	      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+	      series: [	{% for statistic in statistics %}
+	      [{% for s in statistic.report %}{{ s.pk__count }},{% endfor %}],
+	      {% endfor %}
+	      ]
+	    };
+
+	    var options = {
+            stackBars: true,
+            axisX: {
+                labelInterpolationFnc: function(value) {
+                    return value.split(/\s+/).map(function(word) {
+                        return word[0];
+                    }).join('');
+                }
+            },
+            axisY: {
+                offset: 20
+            }
+	    };
+
+	    var responsiveOptions = [
+            ['screen and (min-width: 400px)', {
+                reverseData: true,
+                horizontalBars: true,
+                axisX: {
+                    labelInterpolationFnc: Chartist.noop
+                },
+                axisY: {
+                    offset: 60
+                }
+            }],
+            // Options override for media > 800px
+            ['screen and (min-width: 800px)', {
+                stackBars: false,
+                seriesBarDistance: 10
+            }],
+            // Options override for media > 1000px
+            ['screen and (min-width: 1000px)', {
+                reverseData: false,
+                horizontalBars: false,
+                seriesBarDistance: 15
+            }]
+	    ];
+
+	    Chartist.Bar('#chartActivity', data, options, responsiveOptions);
+
+	    var dataPreferences = {
+	        series: [
+	            [25, 30, 20, 25]
+	        ]
+	    };
+
+	    var optionsPreferences = {
+	        donut: true,
+	        donutWidth: 40,
+	        startAngle: 0,
+	        total: 100,
+	        showLabel: false,
+	        axisX: {
+	            showGrid: false
+	        }
+	    };
+
+	    Chartist.Pie('#chartPreferences', dataPreferences, optionsPreferences);
+
+	    Chartist.Pie('#chartPreferences', {
+	      labels: ['{{m_users}}', '{{f_users}}'],
+	      series: [{{m_users}}, {{f_users}}]
+	    });
+	}
+}
+
+$(document).ready(function(){
+    demo.initChartist();
+});
+</script>
 {% endblock %}

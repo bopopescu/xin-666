@@ -14,23 +14,45 @@
 
 from django.http import HttpResponse
 from .models import Place, Post
+from weibousers.models import WeiboUser
 from .forms import CategorisePostForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic.edit import UpdateView
 from django.core.urlresolvers import reverse
-
+from django.db import connection
+from django.db.models import Count
 def index(request):
 	cx = {}
 	statistics = []
 	places = Place.objects.all()
+	posts = Post.objects.count()
+	uncategorised_posts = Post.objects.filter(category=None).count()
+	users = WeiboUser.objects.count()
+	f_users = WeiboUser.objects.filter(gender='F').count()
+	m_users = WeiboUser.objects.filter(gender='M').count()
+	# truncate_date = connection.ops.date_trunc_sql('month', 'created')
+	# qs = Post.objects.filter(place=1).extra({'month':truncate_date})
+	# report = qs.values('month').annotate(Count('pk')).order_by('month')
+	cx['places'] = places.count()
+	cx['posts'] = posts
+	cx['uncategorised_posts'] = uncategorised_posts
+	cx['users'] = users
+	cx['f_users'] = f_users
+	cx['m_users'] = m_users
 	for place in places:
 		posts = Post.objects.filter(place=place)
 		not_categorised_posts = posts.filter(category=None)
+		truncate_date = connection.ops.date_trunc_sql('month', 'created')
+		qs = posts.extra({'month':truncate_date})
+		report = qs.values('month').annotate(Count('pk')).order_by('month')
 		statistics.append({
 			'place': place,
 			'count': posts.count(),
-			'not_categorised_count': not_categorised_posts.count()
+			'not_categorised_count': not_categorised_posts.count(),
+			'report': report
+
+
 		})
 		cx['statistics'] = statistics
 				
