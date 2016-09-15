@@ -22,6 +22,7 @@ from django.views.generic.edit import UpdateView
 from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Count
+
 def index(request):
 	cx = {}
 	statistics = []
@@ -59,13 +60,17 @@ def index(request):
 	return render(request, "index.html", cx)
 
 
-def place_index(request, place_id):
-    cx = {}
-    place = Place.objects.get(id=place_id)
-    cx['place'] = place
-    cx['posts'] = Post.objects.filter(place=place).order_by('-created')[:10]
-    return render(request, "location/place_index.html", cx)
-
+def place_index(request, place_id, page_num=None):
+	page_num = int(request.GET.get('page', '1'))
+	cx = {}
+	place = Place.objects.get(id=place_id)
+	cx['place'] = place
+	cx['total_posts'] = Post.objects.filter(place=place).count()
+	cx['page_num'] = page_num
+	limit_from = 0 if page_num==1 else (page_num-1)*500
+	limit_to = page_num*500
+	cx['posts'] = Post.objects.filter(place=place).order_by('-created')[limit_from:limit_to]
+	return render(request, "location/place_index.html", cx)
 
 def categorise_post(request, place_id, post_id=None):
 	place = Place.objects.get(id=place_id)

@@ -1,15 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2>{{place.name}}</h2>
+<p>Total: {{total_posts}} Posts</p>
 <br>
-<a href="{% url 'location:categorise_post' place.id %}">Go to categorise a post</a>
+<div class="text-right">	
+	<a href="{% url 'location:categorise_post' place.id %}">Go to categorise a post</a>
+</div>
 <br>
-<h3>Recent 10 Posts</h3>
-{% for post in posts %}
-	{{post.weibo_id}} - {{post.user.name}}
-	<br>
-	<img src="{{post.weibo_img}}" alt="">
-	<p>{{post.text}} - {{post.created}}</p>
-	<br>
-{% endfor %}
+<h3>Recent 500 Posts</h3>
+<div id="thumb-section">
+	<div class="thumb-box">
+	{% if posts %}
+		{% for post in posts %}
+			<img src="{{post.weibo_thumb_img}}" alt="">
+		{% endfor %}
+	{% else %}
+		<h4>Sorry, there is no result.</h4>
+	{% endif %}
+	</div>
+</div>
+
+<div class="pagination-section text-center">
+	{% if page_num != 1 %}
+	<a href="?page={{ page_num|add:"-1" }}"><< Prev </a>
+	{% endif %}
+	<a href="?page={{ page_num|add:"1" }}"> Next >></a>
+</div>
 {% endblock %}

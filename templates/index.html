@@ -8,7 +8,7 @@
                     <div class="row">
                         <div class="col-xs-5">
                             <div class="icon-big icon-warning text-center">
-                                <i class="ti-server"></i>
+                                <i class="ti-home"></i>
                             </div>
                         </div>
                         <div class="col-xs-7">
@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col-xs-5">
                             <div class="icon-big icon-success text-center">
-                                <i class="ti-wallet"></i>
+                                <i class="ti-server"></i>
                             </div>
                         </div>
                         <div class="col-xs-7">
@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="col-xs-5">
                             <div class="icon-big icon-danger text-center">
-                                <i class="ti-pulse"></i>
+                                <i class="ti-harddrives"></i>
                             </div>
                         </div>
                         <div class="col-xs-7">
@@ -65,7 +65,7 @@
                     <div class="row">
                         <div class="col-xs-5">
                             <div class="icon-big icon-info text-center">
-                                <i class="ti-twitter-alt"></i>
+                                <i class="ti-user"></i>
                             </div>
                         </div>
                         <div class="col-xs-7">
@@ -91,7 +91,7 @@
                     <div class="footer">
                         <div class="chart-legend">
                         {% for statistic in statistics %}
-                            <i class="fa fa-circle {% cycle 'text-info' 'text-warning' 'text-danger' 'text-success' 'text-primary' %}">{{ statistic.place.name }}</i> 
+                            <i class="fa fa-circle {% cycle 'text-info' 'text-warning' 'text-danger' 'text-success' 'text-primary' %}"></i>{{ statistic.place.name }}  
                         {% endfor %}
                         </div>
                     </div>
@@ -118,7 +118,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <!--<div class="col-md-6">
             <div class="card">
                 <div class="header">
                     <h4 class="title">Gender Statistics</h4>
@@ -135,7 +135,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
 <!--
@@ -272,6 +272,18 @@ demo = {
 
 $(document).ready(function(){
     demo.initChartist();
+
+    // demo.initChartist();
+
+    $.notify({
+        icon: 'ti-gift',
+        message: "Hi <b>{% if user.is_anonymous %}there{% else %}{{request.user.username}}{% endif %}</b>,"
+
+    },{
+        type: 'success',
+        timer: 500
+    });
+
 });
 </script>
 {% endblock %}
