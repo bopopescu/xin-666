@@ -81,6 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'location.context_processors.place_processor',
             ],
         },
     },
@@ -102,7 +103,6 @@ if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine'):
             'HOST': '/cloudsql/xin-666:xin-666-d0-0',
             'NAME': 'xin666',
             'USER': 'root',
-            'OPTIONS': {'charset': 'utf8mb4'},
         }
     }
 else:
