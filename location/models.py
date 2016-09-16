@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from weibousers.models import WeiboUser
 import os
+import django_filters
 
 def image_path(instance, filename):
     return 'images/{0}/{1}/{2}'.format(instance.place.pk, instance.created.strftime("/%Y/%m/%d/"), filename)
@@ -33,3 +34,10 @@ class Post(models.Model):
     def __unicode__(self):
         return '%s' % (self.weibo_id,)
 
+
+class PostFilter(django_filters.FilterSet):
+    created = django_filters.DateTimeFromToRangeFilter()
+
+    class Meta:
+        model = Post
+        fields = ['place','category', 'created', 'user__province', 'user__city']

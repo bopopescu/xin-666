@@ -35,7 +35,6 @@
 
 </head>
 <body>
-
 <div class="wrapper">
     <div class="sidebar" data-background-color="white" data-active-color="danger">
 
@@ -52,10 +51,16 @@
             </div>
 
             <ul class="nav">
-                <li class="active">
+                <li>
                     <a href="{% url 'location:index'%}">
                         <i class="ti-panel"></i>
                         <p>Dashboard</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'location:post_list'%}">
+                        <i class="ti-search"></i>
+                        <p>Search</p>
                     </a>
                 </li>
                 {% for place in all_places %}
@@ -186,15 +191,13 @@
     <!--  Notifications Plugin    -->
     <script src="{% static 'js/bootstrap-notify.js' %}"></script>
 
-    <!--  Google Maps Plugin    -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
-
     <!-- Paper Dashboard Core javascript and methods for Demo purpose -->
     <script src="{% static 'js/paper-dashboard.js' %}"></script>
 
     <!-- Paper Dashboard DEMO methods, don't include it in your project! -->
     <!--<script src="{% static 'js/demo.js' %}"></script>-->
-
+    
+    <script src="{% static 'js/default.js' %}"></script>
     {% block js %}
     {% endblock %}
 

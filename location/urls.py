@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from .views import index, place_index, categorise_post
+from .views import index, place_index, categorise_post, post_list
 
 urlpatterns = [
     url(r'^$', index, name = "index"),
@@ -7,4 +7,5 @@ urlpatterns = [
     # url(r'^location/(?P<place_id>[0-9]+)categorise_post/categorise/new/$', new_post, name="new_post"),
     url(r'^location/(?P<place_id>[0-9]+)/categorise(?:/(?P<post_id>[0-9]+))?/$', 
     	categorise_post, name="categorise_post"),
+    url(r'^list$', post_list, name='post_list'),
 ]

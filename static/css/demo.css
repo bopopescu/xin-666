@@ -72,3 +72,10 @@
 .table-upgrade td:nth-child(3){
     text-align: center;
 }
+
+
+
+
+.modal-backdrop {
+	display: none;
+}

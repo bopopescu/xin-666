@@ -1,27 +1,14 @@
-# Copyright 2015 Google Inc. All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 from django.http import HttpResponse
-from .models import Place, Post
+from .models import Place, Post, PostFilter
 from weibousers.models import WeiboUser
 from .forms import CategorisePostForm
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.edit import UpdateView
 from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Count
+import json
 
 def index(request):
 	cx = {}
@@ -60,41 +47,76 @@ def index(request):
 	return render(request, "index.html", cx)
 
 
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/')
 def place_index(request, place_id, page_num=None):
 	page_num = int(request.GET.get('page', '1'))
 	cx = {}
 	place = Place.objects.get(id=place_id)
 	cx['place'] = place
-	cx['total_posts'] = Post.objects.filter(place=place).count()
+	cx['total_posts'] = Post.objects.filter(place=place, category=None).count()
 	cx['page_num'] = page_num
 	limit_from = 0 if page_num==1 else (page_num-1)*500
 	limit_to = page_num*500
-	cx['posts'] = Post.objects.filter(place=place).order_by('-created')[limit_from:limit_to]
+	posts = Post.objects.filter(place=place, category=None).order_by('-created')[limit_from:limit_to]
+	main_dict = []
+	for post in posts:
+		post_dict =  {
+			'post': post,
+			'form': CategorisePostForm(request.POST or None, instance=post)
+		}
+		main_dict.append(post_dict)
+	cx['main_dict'] = main_dict
 	return render(request, "location/place_index.html", cx)
 
+
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/')
 def categorise_post(request, place_id, post_id=None):
 	place = Place.objects.get(id=place_id)
 	if post_id:
 		obj = get_object_or_404(Post, pk=post_id)
-		print 'has post id'
-	else:
-		obj = Post.objects.filter(place=place, category=None).order_by('created').first()
-		print 'haven\' post id'
 	form = CategorisePostForm(request.POST or None, instance=obj)
-	print request.method
-	if request.method == 'POST':
-		if form.is_valid():
-			print "form.is_valid"
+	# if request.method == 'POST':
+	# 	if form.is_valid():
+	# 		form.save()
+	# 	return redirect(reverse('location:categorise_post', kwargs={'place_id': place_id}))
+	if request.is_ajax():
+		if obj.category:
+			dict = {
+				'icon': 'ti-alert', 
+				'type': 'danger', 
+				'message': 'Sorry, this post already has been categorised.'
+			}
+		elif form.is_valid():
+			form = form.save(commit=False)
+			form.category_id = int(request.POST['category']) if request.POST['category'] else None
 			form.save()
-		return redirect(reverse('location:categorise_post', kwargs={'place_id': place_id}))
-	print "not valid"
+        # do stuff, e.g. calculate a score
+			dict = {
+				'icon': 'ti-thumb-up', 
+				'type': 'success',
+				'message': 'Updated successfully.'
+			}
+		return HttpResponse(json.dumps(dict), content_type='application/json')
 	return render(request, 'location/categorise_post_form.html', 
 			{'form': form, 'obj': obj})
 
 
-@staff_member_required
+@user_passes_test(lambda u:u.is_staff, login_url='/admin')
 class CategorisePostView(UpdateView):
     # form_class = CategorisePostForm
     model = Post
     fields = ('place', 'user', 'created', 'text', 'weibo_img', 'category',)
     template_name_suffix = '_update_form'
+
+
+def post_list(request):
+	f = PostFilter(request.GET, queryset=Post.objects.all())
+	filtered = False
+	r_place = request.GET.get('place', None)
+	r_category= request.GET.get('category', None)
+	r_created_0 = request.GET.get('created_0', None)
+	r_created_1 = request.GET.get('created_1', None)
+	if r_place or r_category or r_created_0 or r_created_1:
+		filtered = True
+	return render(request, 'location/list.html', {'filter': f, 'filtered': filtered})
+
