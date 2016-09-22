@@ -10,7 +10,8 @@
 	{% if main_dict %}
 		{% for item in main_dict %}
 		<!-- Button trigger modal -->
-		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal-{{item.post.id}}">
+		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" 
+		data-target="#myModal-{{item.post.id}}" data-image="{{item.post.weibo_img}}">
 		  {% with page_num as page_num  %}{{ forloop.counter|post_page_num:page_num }}. {% endwith %}<img src="{{item.post.weibo_thumb_img}}" alt="{{item.post.id}}">
 		</button>
 		<!-- Modal -->
@@ -22,25 +23,34 @@
 						<h4 class="modal-title" id="myModalLabel">{{item.post.created}}</h4>
 					</div>
 					<div class="modal-body">
-						<h4>Place</h4>
-						<p>{{item.post.place}}</p>
-						<h4>Location</h4>
-						<p>{{item.post.user.location}}</p>
-						<h4>Username</h4>
-						<p>{{item.post.user.weibo_name}}</p>
-						<h4>Gender</h4>
-						<p>{{item.post.user.gender}}</p>
-						<h4>Text</h4>
-						<p>{{item.post.text}}</p>
-						<h4>Category</h4>
-						<p class="category-field">None</p>
-						<h4>ID</h4>
-						<p>{{item.post.id}}</p>
+						<div>
+							<h4>Place: </h4> <p>{{item.post.place}}</p>
+						</div>
+						<div>
+							<h4>Location: </h4> <p>{{item.post.user.location}}</p>
+						</div>
+						<div>
+							<h4>Username: </h4> <p>{{item.post.user.weibo_name}}</p>
+						</div>
+						<div>
+							<h4>Gender: </h4> <p>{{item.post.user.get_gender_display}}</p>
+						</div>
+						<div>
+							<h4>Text: </h4> <p>{{item.post.text}}</p>
+						</div>
+						<div>
+							<h4>Category: </h4> <p class="category-field">None</p>
+						</div>
+						<div>
+							<h4>ID: </h4> <p>{{item.post.id}}</p>
+						</div>
 						<hr>
 						<form id="categorise-form-{{item.post.id}}" action="{% url 'location:categorise_post' item.post.place.id item.post.id %}" method="POST">
 							{% csrf_token %}
 						    {{ item.form.as_p }}
-						    <input type="submit" value="Update" />
+						    <div class="text-center">
+						    	<input class="btn btn-info btn-fill btn-wd" type="submit" value="Update" />
+						    </div>
 						</form>
 					</div>
 					<div class="modal-footer">
@@ -70,16 +80,24 @@
     <span><b> Success - </b> This is a regular notification made with ".alert-success"</span>
 </div>
 {% endblock %}
+
 {% block js %}
 <script>
-{% if main_dict %}	
-{% for item in main_dict %}
-	$('#categorise-form-{{item.post.id}}').on('submit', function(event){
-	    event.preventDefault();
-	    console.log("form submitted!"); 
-	    catogorise_post($(this));
-	});
-{% endfor %}
-{% endif %}
+$('form[id^=categorise-form-]').on('submit', function(event){
+    event.preventDefault();
+    catogorise_post($(this));
+});
+
+$('div[id^=myModal-]').on('show.bs.modal', function (event) {
+	var button = $(event.relatedTarget) // Button that triggered the modal
+	var image = button.data('image') // Extract info from data-* attributes
+	// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+	// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+	var modalBody = $(this).find('.modal-body')
+	$('<img />', {
+	    src: image,
+	    width: '100%',
+	}).prependTo(modalBody)
+})
 </script>
 {% endblock %}

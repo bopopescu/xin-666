@@ -1,12 +1,13 @@
 from django.contrib import admin
 from .models import Place, Post
-# Register your models here.
+from import_export.admin import ImportExportModelAdmin
 
-class PlaceAdmin(admin.ModelAdmin):
+class PlaceAdmin(ImportExportModelAdmin):
     search_fields = ['name',]
     list_display = ('name', 'poiid',)
 
-class PostAdmin(admin.ModelAdmin):
+
+class PostAdmin(ImportExportModelAdmin):
     search_fields = ['id', 'place', 'category']
     list_filter = ['place', 'category']
     list_display = ('id', 'place', 'created', 'category')

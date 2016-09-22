@@ -3,7 +3,8 @@ from django.db import models
 from django.db.models import Count
 from .models import WeiboUser
 from location.models import Post
-# Register your models here.
+from import_export.admin import ImportExportModelAdmin
+
 
 class PostInline(admin.TabularInline):
     model = Post
@@ -16,7 +17,8 @@ class PostInline(admin.TabularInline):
     extra = 0
     can_delete = False
 
-class WeiboUserAdmin(admin.ModelAdmin):
+
+class WeiboUserAdmin(ImportExportModelAdmin):
     list_filter = ['gender',]
     list_display = (
     	'weibo_name', 'weibo_id', 'gender', 'province', 'city', 

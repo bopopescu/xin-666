@@ -1,6 +1,4 @@
-.card .content .fa {
-	width: auto;
-}
+@import url(https://fonts.googleapis.com/earlyaccess/notosanssc.css);
 
 @media (min-width: 992px){
     .typo-line{
@@ -73,9 +71,20 @@
     text-align: center;
 }
 
-
-
-
+/*
+Customised CSS
+ */
 .modal-backdrop {
 	display: none;
+}
+.modal-body > div h4,
+.modal-body > div p {
+	display: inline-block;
+    margin: 7px 0;
+}
+.modal-body img {
+	margin-bottom: 30px;
+}
+.card .content .fa {
+	width: auto;
 }
