@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models import Count
 from .models import WeiboUser
 from location.models import Post
-from import_export.admin import ImportExportModelAdmin
+from import_export.admin import ExportMixin
 
 
 class PostInline(admin.TabularInline):
@@ -18,7 +18,7 @@ class PostInline(admin.TabularInline):
     can_delete = False
 
 
-class WeiboUserAdmin(ImportExportModelAdmin):
+class WeiboUserAdmin(ExportMixin, admin.ModelAdmin):
     list_filter = ['gender',]
     list_display = (
     	'weibo_name', 'weibo_id', 'gender', 'province', 'city', 

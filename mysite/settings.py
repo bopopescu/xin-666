@@ -111,7 +111,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'xin666_d0',
+            'NAME': 'xin666',
             'USER': 'root',
             'PASSWORD': '',
             'HOST': 'localhost',

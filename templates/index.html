@@ -194,8 +194,11 @@ demo = {
 	    // ];
 
 	    // Chartist.Line('#chartHours', dataSales, optionsSales, responsiveSales);
-
-
+{% for statistic in statistics %}
+          [{% for s in statistic.report %}
+                {{ s }},
+           {% endfor %}],
+          {% endfor %}
 	    var data = {
 	      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 	      series: [	{% for statistic in statistics %}

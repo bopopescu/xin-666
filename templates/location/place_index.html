@@ -2,6 +2,14 @@
 {% load location_extras %}
 {% block content %}
 <h2>{{place.name}}</h2>
+
+<!--<form id="export-post">
+	{% csrf_token %}
+    <div class="text-right">
+    	<input class="btn btn-info btn-fill btn-wd" type="submit" value="Export all post" />
+    </div>
+</form>-->
+
 <p>Total: {{total_posts}} Posts</p>
 <br>
 <h3>Recent Uncategorised Posts</h3>
@@ -86,6 +94,12 @@
 $('form[id^=categorise-form-]').on('submit', function(event){
     event.preventDefault();
     catogorise_post($(this));
+});
+
+$('form#export-post').on('submit', function(event){
+    event.preventDefault();
+    console.log('clicked');
+    ajax_download($(this));
 });
 
 $('div[id^=myModal-]').on('show.bs.modal', function (event) {
