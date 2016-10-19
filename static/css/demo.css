@@ -88,3 +88,33 @@ Customised CSS
 .card .content .fa {
 	width: auto;
 }
+.bootstrap-datetimepicker-widget {
+	opacity: 1;
+	visibility: visible;
+}
+/*
+Bootstrap-combined CSS
+ */
+form .form-group {
+	margin-bottom: 0;
+}
+form label {
+    max-width: 100%;
+    font-weight: 700;
+    vertical-align: super;
+    color: #66615b;
+}
+form .input-append {
+	display: inline-block;
+}
+form input[type="text"], form input[type="number"] {
+	height: 30px;
+}
+form .input-append .add-on {
+	height: 30px;
+	padding: 5px;
+}
+.bootstrap-datetimepicker-widget ul {
+	list-style: none;
+	margin-left: 0;
+}

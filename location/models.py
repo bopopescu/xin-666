@@ -32,7 +32,7 @@ class Post(models.Model):
         ordering = ('created',)
 
     def __unicode__(self):
-        return '%s' % (self.weibo_id,)
+        return '%s' % (self.pk,)
 
 
 class PostFilter(django_filters.FilterSet):

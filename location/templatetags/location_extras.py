@@ -4,5 +4,5 @@ register = template.Library()
 
 @register.filter
 def post_page_num(value, page_num=None):
-	page_volume = (page_num-1)*500
+	page_volume = (page_num-1)*20
 	return value + page_volume

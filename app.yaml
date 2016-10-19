@@ -36,5 +36,13 @@ libraries:
 skip_files:
 - ^images$
 - ^(images/.*)
+- ^google-cloud-sdk$
+- ^static/sass$
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^(.*/)?\.bak$
 # [END django_app]
 

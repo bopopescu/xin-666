@@ -55,8 +55,8 @@ def place_index(request, place_id, page_num=None):
 	cx['place'] = place
 	cx['total_posts'] = Post.objects.filter(place=place, category=None).count()
 	cx['page_num'] = page_num
-	limit_from = 0 if page_num==1 else (page_num-1)*100
-	limit_to = page_num*100
+	limit_from = 0 if page_num==1 else (page_num-1)*20
+	limit_to = page_num*20
 	posts = Post.objects.filter(place=place, category=None).order_by('-created')[limit_from:limit_to]
 	main_dict = []
 	for post in posts:
