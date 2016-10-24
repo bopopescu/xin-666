@@ -3,7 +3,6 @@ from django.utils import timezone
 from weibousers.models import WeiboUser
 import os
 import django_filters
-
 def image_path(instance, filename):
     return 'images/{0}/{1}/{2}'.format(instance.place.pk, instance.created.strftime("/%Y/%m/%d/"), filename)
 

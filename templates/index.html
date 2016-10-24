@@ -1,7 +1,4 @@
 {% extends 'base.html' %}
-{% block head %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.min.js"></script>
-{% endblock %}
 {% block content %}  
 <div class="container-fluid">
     <div class="row">
@@ -82,112 +79,11 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        {% for stat in statistics %}
-        <div class="col-md-6">
-            <div class="card ">
-                <div class="header">
-                    <h4 class="title">2016 {{ stat.place.name }}</h4>
-                </div>
-                <div class="content">
-                    <canvas id="chartActivity{{stat.place.id}}"></canvas>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="header">
-                    <h4 class="title">Gender Statistics</h4>
-                    <p class="category">Weibo Users Info</p>
-                </div>
-                <div class="content">
-                    <canvas id="chartPreferences"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 {% endblock %}
 
 {% block js %}
-{% for stat in statistics %}
 <script>
-
-var ctx{{stat.place.id}} = document.getElementById("chartActivity{{stat.place.id}}");
-var myChart{{stat.place.id}}  = new Chart(ctx{{stat.place.id}}, {
-    type: 'bar',
-    data: {
-        labels: [{% for s in stat.report %}"{{ s.month|date:'F' }}",{% endfor %}],
-        datasets: [{
-            label: '{{stat.place.name}}',
-            data: [{% for s in stat.report %}{{ s.pk__count }},{% endfor %}],
-            backgroundColor: [
-                'rgba(192, 57, 43, 0.5)',
-                'rgba(231, 76, 60, 0.5)',
-                'rgba(211, 84, 0, 0.5)',
-                'rgba(230, 126, 34, 0.5)',
-                'rgba(241, 196, 15, 0.5)',
-                'rgba(46, 204, 113, 0.5)',
-                'rgba(26, 188, 156, 0.5)',
-                'rgba(52, 152, 219, 0.5)',
-                'rgba(155, 89, 182, 0.5)',
-                'rgba(52, 73, 94, 0.5)',
-                'rgba(127, 140, 141, 0.5)'
-            ],
-            borderColor: [
-                'rgba(192, 57, 43, 1)',
-                'rgba(231, 76, 60, 1)',
-                'rgba(211, 84, 0, 1)',
-                'rgba(230, 126, 34, 1)',
-                'rgba(241, 196, 15, 1)',
-                'rgba(46, 204, 113, 1)',
-                'rgba(26, 188, 156, 1)',
-                'rgba(52, 152, 219, 1)',
-                'rgba(155, 89, 182, 1)',
-                'rgba(52, 73, 94, 1)',
-                'rgba(127, 140, 141, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
-        }
-    }
-});
-</script>
-{% endfor %}
-
-<script>
-var ctx = document.getElementById("chartPreferences");
-var myDoughnutChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-        labels: ['Femle', 'Male'],
-        datasets: [
-            {
-                data: [{{f_users}}, {{m_users}}],
-                backgroundColor: [
-                    "#FF6384",
-                    "#36A2EB",
-                ],
-                hoverBackgroundColor: [
-                    "#FF6384",
-                    "#36A2EB",
-                ]
-            }]
-    },
-    animation:{
-        animateScale:true
-    }
-});
-
 $(document).ready(function(){
 
     $.notify({

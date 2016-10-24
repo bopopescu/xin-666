@@ -11,6 +11,7 @@ class PostAdmin(VersionAdmin):
     search_fields = ['id', 'place__name', 'category__name']
     list_filter = ['place', 'category']
     list_display = ('id', 'place', 'created', 'category')
-
+    actions = None
+    
 admin.site.register(Place, PlaceAdmin)
 admin.site.register(Post, PostAdmin)
