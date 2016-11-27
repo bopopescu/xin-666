@@ -24,6 +24,4 @@ def prev_page_url(request):
 
 @register.filter
 def get_province(value):
-    print value
-    print PROVINCE_CHOICES
     return dict(PROVINCE_CHOICES).get(value)
