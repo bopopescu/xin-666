@@ -99,3 +99,7 @@ resources/
 
 # Image
 images/
+
+# google-app-engine
+client-cert.pem
+client-key.pem
