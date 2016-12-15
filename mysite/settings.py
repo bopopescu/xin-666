@@ -34,6 +34,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+with open('/etc/secret_key.txt') as f:
+    SECRET_KEY = f.read().strip()
 SECRET_KEY = '-c&qt=71oi^e5s8(ene*$b89^#%*0xeve$x_trs91veok9#0h0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -98,28 +100,17 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # [START db_setup]
 import os
-if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine'):
-    # Running on production App Engine, so use a Google Cloud SQL database.
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'HOST': '/cloudsql/xin-666:xin-666-d0-0',
-            'NAME': 'xin666',
-            'USER': 'root',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'xin666',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {'charset': 'utf8mb4'},
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'xin666',
-            'USER': 'root',
-            'PASSWORD': '',
-            'HOST': 'localhost',
-            'PORT': '3306',
-            'OPTIONS': {'charset': 'utf8mb4'},
-        }
-    }
+}
 # [END db_setup]
 
 # Internationalization
@@ -142,8 +133,7 @@ USE_TZ = True
 STATIC_ROOT='static'
 STATIC_URL = '/static/'
 
-
-# Weibo User Infomation
-APP_KEY = '4273565439'
-APP_SECRETKEY = '8934220d93ea8caf4e93c0ddefe14d76'
-WEIBO_ACCESS_TOKEN = '2.00yueGSCpa8NfEade730aeb7NYiLCD'
+try:
+    from prod_settings import *
+except:
+    pass
